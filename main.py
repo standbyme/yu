@@ -1,20 +1,8 @@
-from dataclasses import dataclass
-from typing import List, Dict
-
 import pandas as pd
+from sklearn.model_selection import train_test_split
 
-from feature_engineering import get_numerical_cols
-
-
-@dataclass(frozen=True)
-class ColumnInfo:
-    dtype: str
-
-
-@dataclass(frozen=True)
-class DataInfo:
-    columns: Dict[str, ColumnInfo]
-    size: int
+from feature_engineering import FeatureEngineeringResult
+from dataclass import DataInfo, SplitResult, TrainDataPair, ValDataPair
 
 
 def load(path: str, sep: str) -> pd.DataFrame:
@@ -31,7 +19,10 @@ def EDA(data: pd.DataFrame):
     pass
 
 
-if __name__ == '__main__':
-    train_data = pd.read_csv(r"C:\Users\htsai\Downloads\used_car_train_20200313\used_car_train_20200313.csv", sep=' ')
-    print(len(train_data))
-    # get_numerical_cols(data)
+def split(feature_engineering_result: FeatureEngineeringResult, test_size: float):
+    x_train, x_val, y_train, y_val = train_test_split(feature_engineering_result.X, feature_engineering_result.Y,
+                                                      test_size=test_size)
+    train: TrainDataPair = TrainDataPair(x_train, y_train)
+    val: ValDataPair = ValDataPair(x_val, y_val)
+
+    return SplitResult(train, val)
