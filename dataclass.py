@@ -1,5 +1,6 @@
 from dataclasses import dataclass
-from typing import Dict
+from enum import Enum, auto
+from typing import Dict, Callable, Any
 
 import pandas as pd
 
@@ -37,3 +38,23 @@ class ValDataPair(DataPair):
 class SplitResult:
     train: TrainDataPair
     val: ValDataPair
+
+
+class ModelType(Enum):
+    XGBRegressor = auto()
+    LGBMRegressor = auto()
+
+
+@dataclass(frozen=True)
+class BuildModelResult:
+    model: Any
+    MAE: Any
+    val: pd.DataFrame
+
+
+@dataclass(frozen=True)
+class FusionResult:
+    predict_func: Callable[[pd.DataFrame], pd.DataFrame]
+
+    def predict(self, x: pd.DataFrame) -> pd.DataFrame:
+        return self.predict_func(x)
