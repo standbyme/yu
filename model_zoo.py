@@ -55,7 +55,9 @@ def fusion(build_model_results: List[BuildModelResult], split_result: SplitResul
     def func(x):
         func_a_val = model_result_0.model.predict(x)
         func_b_val = model_result_1.model.predict(x)
+        # noinspection PyTypeChecker
         func_a = func_a_val * (1 - model_result_0.MAE / MAE_sum)
+        # noinspection PyTypeChecker
         func_b = func_b_val * (1 - model_result_1.MAE / MAE_sum)
         return func_a + func_b
 
